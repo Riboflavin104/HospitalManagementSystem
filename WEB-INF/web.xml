@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Hospital Management System</display-name>
+
+    <!-- ===================== WELCOME PAGE ===================== -->
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- ===================== SESSION ===================== -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <!-- set to true once you serve the app over HTTPS -->
+            <secure>false</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!-- ===================== JSP SETTINGS ===================== -->
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+        </jsp-property-group>
+    </jsp-config>
+
+    <!-- ===================== FILTERS ===================== -->
+
+    <!-- 1. UTF-8 for all requests (built into Tomcat, no code needed) -->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignore</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 2. Login + role check (your class: com.hms.filter.AuthFilter) -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.hms.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/doctor/*</url-pattern>
+        <url-pattern>/patient/*</url-pattern>
+        <url-pattern>/receptionist/*</url-pattern>
+        <url-pattern>/account/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ===================== SERVLETS (CONTROLLERS) ===================== -->
+
+    <!-- Public -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.hms.servlet.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.hms.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>com.hms.servlet.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+
+    <!-- Any logged-in user -->
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>com.hms.servlet.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/account/change-password</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <servlet-class>com.hms.servlet.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <url-pattern>/account/profile</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin module -->
+    <servlet>
+        <servlet-name>AdminDoctorServlet</servlet-name>
+        <servlet-class>com.hms.servlet.AdminDoctorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDoctorServlet</servlet-name>
+        <url-pattern>/admin/doctors</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminReceptionistServlet</servlet-name>
+        <servlet-class>com.hms.servlet.AdminReceptionistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminReceptionistServlet</servlet-name>
+        <url-pattern>/admin/receptionists</url-pattern>
+    </servlet-mapping>
+
+    <!-- Doctor module -->
+    <servlet>
+        <servlet-name>DoctorAppointmentServlet</servlet-name>
+        <servlet-class>com.hms.servlet.DoctorAppointmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DoctorAppointmentServlet</servlet-name>
+        <url-pattern>/doctor/appointments</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MedicalHistoryServlet</servlet-name>
+        <servlet-class>com.hms.servlet.MedicalHistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MedicalHistoryServlet</servlet-name>
+        <url-pattern>/doctor/history</url-pattern>
+    </servlet-mapping>
+
+    <!-- Patient module -->
+    <servlet>
+        <servlet-name>BookAppointmentServlet</servlet-name>
+        <servlet-class>com.hms.servlet.BookAppointmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BookAppointmentServlet</servlet-name>
+        <url-pattern>/patient/book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ViewAppointmentServlet</servlet-name>
+        <servlet-class>com.hms.servlet.ViewAppointmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewAppointmentServlet</servlet-name>
+        <url-pattern>/patient/appointments</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CancelAppointmentServlet</servlet-name>
+        <servlet-class>com.hms.servlet.CancelAppointmentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CancelAppointmentServlet</servlet-name>
+        <url-pattern>/patient/cancel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PatientHistoryServlet</servlet-name>
+        <servlet-class>com.hms.servlet.PatientHistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PatientHistoryServlet</servlet-name>
+        <url-pattern>/patient/history</url-pattern>
+    </servlet-mapping>
+
+    <!-- Receptionist module -->
+    <servlet>
+        <servlet-name>ReceptionistBookingServlet</servlet-name>
+        <servlet-class>com.hms.servlet.ReceptionistBookingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReceptionistBookingServlet</servlet-name>
+        <url-pattern>/receptionist/book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ManagePatientServlet</servlet-name>
+        <servlet-class>com.hms.servlet.ManagePatientServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ManagePatientServlet</servlet-name>
+        <!-- handles list, edit and delete via an "action" parameter -->
+        <url-pattern>/receptionist/patients</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GenerateBillServlet</servlet-name>
+        <servlet-class>com.hms.servlet.GenerateBillServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GenerateBillServlet</servlet-name>
+        <url-pattern>/receptionist/bill</url-pattern>
+    </servlet-mapping>
+
+    <!-- ===================== ERROR PAGES ===================== -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error/403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error/500.jsp</location>
+    </error-page>
+
+</web-app>
